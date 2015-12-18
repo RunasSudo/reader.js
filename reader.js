@@ -126,6 +126,15 @@ function renderEPUB(html) {
 		}
 	});
 	
+	// Fix ePub img
+	$("#book").find("img").each(function(i, e) {
+		var targetLink = $(e).attr("src");
+		if (resolvePath(basedir(page) + targetLink).length > 0) {
+			targetLink = book + basedir(page) + targetLink;
+			$(e).attr("src", targetLink);
+		}
+	});
+	
 	// Fix ePub CSS
 	var htmlLinks = html.match(/(<\s*link[^>]*>)/g);
 	$(htmlLinks).each(function(i, e) {
