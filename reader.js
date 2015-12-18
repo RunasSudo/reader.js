@@ -117,9 +117,20 @@ function finishedRendering() {
 		var scroll = $.url("#scroll") / 100 * ($(document).height() - $(window).height());
 		$(window).scrollTop(scroll);
 	}
-
+	
 	$(window).scroll(function() {
-		var scrollpc = $(window).scrollTop() / ($(document).height() - $(window).height()) * 100;
-		window.location = "#scroll=" + scrollpc;
+		// Delay the processing to improve performance
+		if (scrollTimer) {
+			window.clearTimeout(scrollTimer);
+		}
+		scrollTimer = window.setTimeout(handleScroll, 500);
 	});
+}
+
+// Fancy scroll things
+var scrollTimer = null;
+function handleScroll() {
+	scrollTimer = null;
+	var scrollpc = $(window).scrollTop() / ($(document).height() - $(window).height()) * 100;
+	window.location = "#scroll=" + scrollpc;
 }
