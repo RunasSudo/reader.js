@@ -68,7 +68,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 				console.log("Loaded page " + page);
 				
 				renderEPUB(html);
-				$(window).load(finishedRendering); // Wait to finish rendering
+				window.setTimeout(finishedRendering, 500); // Wait to finish rendering
 			});
 		} else {
 			var firstPageID = epubContent.find("spine").children().eq(0).attr("idref");
