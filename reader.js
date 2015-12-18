@@ -14,49 +14,68 @@
 //    You should have received a copy of the GNU Affero General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-var epubContent;
-
 var book = $.url("?book") + "/";
-var page = $.url("?page");
+var page = $.url("?page"); // relative to reader.html
 
 // Helper functions and button code
-function gotoPage(href) {
-	window.location = "?" + $.param({book: $.url("?book"), page: href});
+function gotoPage(href, anchor) {
+	window.location = "?" + $.param({book: $.url("?book"), page: traverseRelative(href)}) + (anchor ? "#" + $.param({anchor: anchor}) : "");
 }
 
 function resolveID(id) {
 	return epubContent.find("item#" + id).attr("href");
 }
+function resolvePath(path) {
+	// Deal with relative paths
+	path = traverseRelative(path);
+	
+	if (path.startsWith(basedir(opfPath))) {
+		path = path.substring(basedir(opfPath).length);
+	}
+	var items = epubContent.find("item[href='" + path + "']");
+	return items.attr("id") || $();
+}
+function basedir(path) {
+	return path.substring(0, path.lastIndexOf("/") + 1);
+}
+function traverseRelative(path) {
+	return path.replace(/[^\/]*\/\.\.\//, ""); // [^/]*../
+}
 
 function gotoFront() {
-	gotoPage(resolveID(epubContent.find("spine").children().eq(0).attr("idref")));
+	gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(0).attr("idref")));
+}
 }
 function getChapterIndex() {
-	var id = epubContent.find("item[href='" + page + "']").attr("id");
+	var id = resolvePath(page);
 	var inSpine = epubContent.find("spine itemref[idref='" + id + "']");
 	return epubContent.find("spine").children().index(inSpine);
 }
 function gotoPrev() {
 	var index = getChapterIndex();
 	if (index > 0) {
-		gotoPage(resolveID(epubContent.find("spine").children().eq(index - 1).attr("idref")));
+		gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index - 1).attr("idref")));
 	}
 }
 function gotoNext() {
 	var index = getChapterIndex();
 	if (index < epubContent.find("spine").children().length - 1) {
-		gotoPage(resolveID(epubContent.find("spine").children().eq(index + 1).attr("idref")));
+		gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index + 1).attr("idref")));
 	}
 }
 
 // The guts
+var epubContent;
+var opfPath;
+
 console.log("Loading " + book + "META-INF/container.xml");
 $.get(book + "META-INF/container.xml", function(container) {
 	console.log("Loaded container.xml");
 	
-	console.log("Loading " + book + $(container).find("rootfile").attr("full-path"));
-	$.get(book + $(container).find("rootfile").attr("full-path"), function(content) {
-		console.log("Loaded content.opf");
+	opfPath = $(container).find("rootfile").attr("full-path");
+	console.log("Loading " + book + opfPath);
+	$.get(book + opfPath, function(content) {
+		console.log("Loaded " + opfPath);
 		
 		epubContent = $(content);
 		document.title = epubContent.find("dc\\:title").text();
@@ -69,11 +88,11 @@ $.get(book + "META-INF/container.xml", function(container) {
 				
 				renderEPUB(html);
 				window.setTimeout(finishedRendering, 500); // Wait to finish rendering
-			});
+			}, "html"); // Explicitly specify type for consistency, as some pages are XML
 		} else {
 			var firstPageID = epubContent.find("spine").children().eq(0).attr("idref");
 			console.log("Loading id " + firstPageID);
-			var firstPageHref = resolveID(firstPageID);
+			var firstPageHref = basedir(opfPath) + resolveID(firstPageID);
 			console.log("Loading page " + firstPageHref);
 			
 			gotoPage(firstPageHref);
@@ -88,8 +107,14 @@ function renderEPUB(html) {
 	// Fix ePub internal links
 	$("#book").find("a").click(function(event) {
 		var targetPage = $(event.target).attr("href");
-		if (epubContent.find("item[href='" + targetPage + "']").length > 0) {
-			gotoPage(targetPage);
+		var anchor;
+		if (targetPage.contains("#")) {
+			anchor = targetPage.substring(targetPage.indexOf("#") + 1);
+			targetPage = targetPage.substring(0, targetPage.indexOf("#"));
+		}
+		
+		if (resolvePath(basedir(page) + targetPage).length > 0) {
+			gotoPage(basedir(page) + targetPage, anchor);
 			return false;
 		}
 	});
@@ -97,10 +122,10 @@ function renderEPUB(html) {
 	// Fix ePub CSS
 	var htmlLinks = html.match(/(<\s*link[^>]*>)/g);
 	$(htmlLinks).each(function(i, e) {
-		if ($(e).attr("rel") === "stylesheet") {
+		if ($(e).attr("rel") === "stylesheet" && $(e).attr("type") === "text/css") {
 			var targetLink = $(e).attr("href");
-			if (epubContent.find("item[href='" + targetLink + "']")) {
-				targetLink = book + targetLink;
+			if (resolvePath(basedir(page) + targetLink)) {
+				targetLink = book + basedir(page) + targetLink;
 			}
 			// Replace with a scoped CSS import
 			console.log("Replacing stylesheet for " + targetLink);
@@ -113,7 +138,9 @@ function renderEPUB(html) {
 
 function finishedRendering() {
 	// Scroll position
-	if ($.url("#scroll")) {
+	if ($.url("#anchor")) {
+		$("#" + $.url("#anchor"))[0].scrollIntoView();
+	} else if ($.url("#scroll")) {
 		var scroll = $.url("#scroll") / 100 * ($(document).height() - $(window).height());
 		$(window).scrollTop(scroll);
 	}
