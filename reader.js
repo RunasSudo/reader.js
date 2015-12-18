@@ -175,5 +175,5 @@ var scrollTimer = null;
 function handleScroll() {
 	scrollTimer = null;
 	var scrollpc = $(window).scrollTop() / ($(document).height() - $(window).height()) * 100;
-	window.location = "#scroll=" + scrollpc;
+	history.replaceState(undefined, undefined, "#scroll=" + scrollpc);
 }
