@@ -18,6 +18,7 @@
 
 .nav {
 	position: fixed;
+	z-index: 999;
 	left: 1em;
 	top: 1em;
 	text-align: center;
