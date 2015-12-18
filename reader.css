@@ -36,11 +36,23 @@
 }
 
 #book {
-	display: block;
 	width: 100%;
 	max-width: 33em;
-	box-shadow: 5px 5px 25px 10px #888;
-	margin: 1em auto;
-	padding: 3em 4em;
-	border: none;
+}
+
+@media screen {
+	#book {
+		box-shadow: 5px 5px 25px 10px #888;
+		margin: 1em auto;
+		padding: 3em 4em;
+	}
+}
+
+@media screen and (max-width: 760px) {
+	#book {
+		box-shadow: none;
+		max-width: 100%;
+		margin: 0;
+		box-sizing: border-box;
+	}
 }
