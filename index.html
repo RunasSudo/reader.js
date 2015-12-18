@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>eBook Reader</title>
+		<link rel="stylesheet" type="text/css" href="reader.css">
+		<link rel="stylesheet" type="text/css" href="vendor/annotator-1.2.10.min.css">
+	</head>
+	<body>
+		<div class="nav">
+			<a href="javascript:gotoFront();">Front</a>
+			<a href="javascript:gotoPrev();">← Prev</a>
+			<a href="javascript:gotoNext();">Next →</a>
+		</div>
+		
+		<div id="bookOuter">
+			<div id="book"></div>
+		</div>
+		
+		<script type="application/javascript" src="vendor/jquery-2.1.4.min.js"></script>
+		<script type="application/javascript" src="vendor/js-url-1.8.8.min.js"></script>
+		<script type="application/javascript" src="reader.js"></script>
+		
+		<script type="application/javascript" src="vendor/annotator-1.2.10.min.js"></script>
+		<script type="application/javascript" src="reader.annotations.js"></script>
+	</body>
+</html>

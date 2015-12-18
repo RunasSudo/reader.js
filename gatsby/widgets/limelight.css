@@ -1,0 +1,9 @@
+@import url("//fonts.googleapis.com/css?family=Limelight");
+.limelight {
+	font-family: Limelight, Georgia, serif;
+	font-size:150%;
+	font-variant:normal; font-weight:normal;
+}
+.dropcap:first-letter {
+	font-family: Limelight, Georgia, serif;
+}

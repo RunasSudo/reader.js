@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="path">
+  <opf:metadata
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:opf="http://www.idpf.org/2007/opf"
+	xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier id="path">https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/gatsby/</dc:identifier>
+<dc:title>The Great Gatsby</dc:title>
+<dc:description>The Great Gatsby / F. Scott Fitzgerald</dc:description>
+<dc:publisher>The University of Adelaide Library</dc:publisher>
+<dc:identifier>https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/gatsby/</dc:identifier>
+<dc:type>text</dc:type>
+<dc:format>text/html</dc:format>
+    <meta name="cover" content="cover-image"/>
+    <meta property="dcterms:modified">2015-08-25T00:00:00Z</meta>
+  </opf:metadata>
+  <manifest>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml" />
+    <item id="toc" properties="nav" href="toc.html" media-type="application/xhtml+xml" />
+    <item id="index" href="index.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="file2" href="widgets/endpaper.jpg" media-type="image/jpeg" />
+    <item id="file3" href="widgets/style.css" media-type="text/css" />
+    <item id="file4" href="widgets/limelight.css" media-type="text/css" />
+    <item id="contents" href="contents.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="frontmatter" href="frontmatter.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter1" href="chapter1.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter2" href="chapter2.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter3" href="chapter3.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter4" href="chapter4.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter5" href="chapter5.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter6" href="chapter6.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter7" href="chapter7.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter8" href="chapter8.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="chapter9" href="chapter9.html" media-type="application/xhtml+xml" properties="scripted" />
+    <item id="cover-image" href="cover.jpg" media-type="image/jpeg"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="index"/>
+    <itemref idref="contents"/>
+    <itemref idref="frontmatter"/>
+    <itemref idref="chapter1"/>
+    <itemref idref="chapter2"/>
+    <itemref idref="chapter3"/>
+    <itemref idref="chapter4"/>
+    <itemref idref="chapter5"/>
+    <itemref idref="chapter6"/>
+    <itemref idref="chapter7"/>
+    <itemref idref="chapter8"/>
+    <itemref idref="chapter9"/>
+  </spine>
+</package>
