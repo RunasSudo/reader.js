@@ -839,6 +839,7 @@
       ".annotator-adder button click": "onAdderClick",
       ".annotator-adder button mousedown": "onAdderMousedown",
       ".annotator-hl mouseover": "onHighlightMouseover",
+      ".annotator-hl mousedown": "onHighlightMouseover",
       ".annotator-hl mouseout": "startViewerHideTimer"
     };
 
@@ -1221,7 +1222,7 @@
 
     Annotator.prototype.checkForStartSelection = function(event) {
       if (!(event && this.isAnnotator(event.target))) {
-        this.startViewerHideTimer();
+        //this.startViewerHideTimer();
       }
       return this.mouseIsDown = true;
     };
