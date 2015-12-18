@@ -73,6 +73,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 					var targetPage = $(event.target).attr("href");
 					if (epubContent.find("item[href='" + targetPage + "']")) {
 						gotoPage(targetPage);
+						return false;
 					}
 				});
 				
