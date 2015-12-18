@@ -48,11 +48,17 @@
 	}
 }
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 768px), screen and (max-device-width: 1024px) {
 	#book {
 		box-shadow: none;
 		max-width: 100%;
 		margin: 0;
 		box-sizing: border-box;
+		
+		margin: 0.5em auto;
+		padding: 1.5em 2em;
+	}
+	body {
+		font-size: 2em;
 	}
 }
