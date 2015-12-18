@@ -113,7 +113,7 @@ function renderEPUB(html) {
 	
 	// Fix ePub internal links
 	$("#book").find("a").click(function(event) {
-		var targetPage = $(event.target).attr("href");
+		var targetPage = $(this).attr("href");
 		var anchor;
 		if (targetPage.contains("#")) {
 			anchor = targetPage.substring(targetPage.indexOf("#") + 1);
