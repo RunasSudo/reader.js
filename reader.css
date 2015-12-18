@@ -61,4 +61,8 @@
 	body {
 		font-size: 2em;
 	}
+	
+	.nav a {
+		display: inline-block;
+	}
 }
