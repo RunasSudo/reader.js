@@ -19,6 +19,7 @@ var epubContent;
 var book = $.url("?book") + "/";
 var page = $.url("?page");
 
+// Helper functions and button code
 function gotoPage(href) {
 	window.location = "?" + $.param({book: $.url("?book"), page: href});
 }
@@ -48,6 +49,7 @@ function gotoNext() {
 	}
 }
 
+// The guts
 console.log("Loading " + book + "META-INF/container.xml");
 $.get(book + "META-INF/container.xml", function(container) {
 	console.log("Loaded container.xml");
@@ -65,33 +67,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 			$.get(book + page, function(html) {
 				console.log("Loaded page " + page);
 				
-				var htmlBody = html.match(/<\s*body[^>]*>([\s\S]*)<\s*\/\s*body\s*>/)[1]; // Damn it, jQuery!
-				$("#book").html(htmlBody);
-				
-				// Fix ePub internal links
-				$("#book").find("a").click(function(event) {
-					var targetPage = $(event.target).attr("href");
-					if (epubContent.find("item[href='" + targetPage + "']").length > 0) {
-						gotoPage(targetPage);
-						return false;
-					}
-				});
-				
-				// Fix ePub CSS
-				var htmlLinks = html.match(/(<\s*link[^>]*>)/g);
-				$(htmlLinks).each(function(i, e) {
-					if ($(e).attr("rel") === "stylesheet") {
-						var targetLink = $(e).attr("href");
-						if (epubContent.find("item[href='" + targetLink + "']")) {
-							targetLink = book + targetLink;
-						}
-						// Replace with a scoped CSS import
-						console.log("Replacing stylesheet for " + targetLink);
-						var style = $("<style></style>").attr("type", "text/css").attr("scoped", "");
-						style.html('@import "' + targetLink + '";');
-						$("#book").append(style);
-					}
-				});
+				renderEPUB(html);
 			});
 		} else {
 			var firstPageID = epubContent.find("spine").children().eq(0).attr("idref");
@@ -103,3 +79,33 @@ $.get(book + "META-INF/container.xml", function(container) {
 		}
 	}, "xml");
 }, "xml");
+
+function renderEPUB(html) {
+	var htmlBody = html.match(/<\s*body[^>]*>([\s\S]*)<\s*\/\s*body\s*>/)[1]; // Damn it, jQuery!
+	$("#book").html(htmlBody);
+	
+	// Fix ePub internal links
+	$("#book").find("a").click(function(event) {
+		var targetPage = $(event.target).attr("href");
+		if (epubContent.find("item[href='" + targetPage + "']").length > 0) {
+			gotoPage(targetPage);
+			return false;
+		}
+	});
+	
+	// Fix ePub CSS
+	var htmlLinks = html.match(/(<\s*link[^>]*>)/g);
+	$(htmlLinks).each(function(i, e) {
+		if ($(e).attr("rel") === "stylesheet") {
+			var targetLink = $(e).attr("href");
+			if (epubContent.find("item[href='" + targetLink + "']")) {
+				targetLink = book + targetLink;
+			}
+			// Replace with a scoped CSS import
+			console.log("Replacing stylesheet for " + targetLink);
+			var style = $("<style></style>").attr("type", "text/css").attr("scoped", "");
+			style.html('@import "' + targetLink + '";');
+			$("#book").append(style);
+		}
+	});
+}
