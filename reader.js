@@ -68,6 +68,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 				console.log("Loaded page " + page);
 				
 				renderEPUB(html);
+				$(window).load(finishedRendering); // Wait to finish rendering
 			});
 		} else {
 			var firstPageID = epubContent.find("spine").children().eq(0).attr("idref");
@@ -107,5 +108,18 @@ function renderEPUB(html) {
 			style.html('@import "' + targetLink + '";');
 			$("#book").append(style);
 		}
+	});
+}
+
+function finishedRendering() {
+	// Scroll position
+	if ($.url("#scroll")) {
+		var scroll = $.url("#scroll") / 100 * ($(document).height() - $(window).height());
+		$(window).scrollTop(scroll);
+	}
+
+	$(window).scroll(function() {
+		var scrollpc = $(window).scrollTop() / ($(document).height() - $(window).height()) * 100;
+		window.location = "#scroll=" + scrollpc;
 	});
 }
