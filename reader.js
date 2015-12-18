@@ -45,6 +45,8 @@ function traverseRelative(path) {
 function gotoFront() {
 	gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(0).attr("idref")));
 }
+function gotoTOC() {
+	gotoPage(basedir(opfPath) + epubContent.find("item#toc[media-type*='html'], item#contents[media-type*='html']").attr("href")); // Make a guess
 }
 function getChapterIndex() {
 	var id = resolvePath(page);
@@ -79,6 +81,11 @@ $.get(book + "META-INF/container.xml", function(container) {
 		
 		epubContent = $(content);
 		document.title = epubContent.find("dc\\:title").text();
+		
+		// See if we can find a table of contents
+		if (epubContent.find("item#toc[media-type*='html'], item#contents[media-type*='html']").length === 0) {
+			$("#btnTOC").hide();
+		}
 		
 		if (page) {
 			console.log("Loading page " + page);
