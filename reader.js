@@ -71,7 +71,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 				// Fix ePub internal links
 				$("#book").find("a").click(function(event) {
 					var targetPage = $(event.target).attr("href");
-					if (epubContent.find("item[href='" + targetPage + "']")) {
+					if (epubContent.find("item[href='" + targetPage + "']").length > 0) {
 						gotoPage(targetPage);
 						return false;
 					}
