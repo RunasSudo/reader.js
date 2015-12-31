@@ -18,7 +18,6 @@
 	-webkit-box-shadow: none;
 	-o-box-shadow: none;
 	box-shadow: none;
-	color: rgb(144, 144, 144);
 }
 
 /* Images
@@ -694,6 +693,7 @@
 	line-height: 1.6;
 	font-weight: bold;
 	background-color: rgb(230, 230, 230);
+	color: rgb(144, 144, 144);
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	-o-border-radius: 8px;
