@@ -134,6 +134,13 @@ function renderEPUB(html) {
 			$(e).attr("src", targetLink);
 		}
 	});
+	$("#book").find("image").each(function(i, e) { // images in inline SVGs
+		var targetLink = $(e).attr("xlink:href");
+		if (resolvePath(basedir(page) + targetLink).length > 0) {
+			targetLink = book + basedir(page) + targetLink;
+			$(e).attr("xlink:href", targetLink);
+		}
+	});
 	
 	// Fix ePub CSS
 	var htmlLinks = html.match(/(<\s*link[^>]*>)/g);
