@@ -30,3 +30,4 @@ bookBody.annotator("addPlugin", "Store", {
 	}
 });
 bookBody.annotator("addPlugin", "Tags");
+bookBody.annotator("addPlugin", "Markdown");

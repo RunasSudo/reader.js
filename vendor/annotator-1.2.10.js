@@ -3027,9 +3027,10 @@
 
     function Markdown(element, options) {
       this.updateTextField = __bind(this.updateTextField, this);
-      if ((typeof Showdown !== "undefined" && Showdown !== null ? Showdown.converter : void 0) != null) {
+      if ((typeof showdown !== "undefined" && showdown !== null ? showdown.Converter : void 0) != null) {
         Markdown.__super__.constructor.apply(this, arguments);
-        this.converter = new Showdown.converter();
+        this.converter = new showdown.Converter();
+        this.converter.setFlavor("github");
       } else {
         console.error(Annotator._t("To use the Markdown plugin, you must include Showdown into the page first."));
       }
@@ -3173,7 +3174,7 @@
     }
     win = Annotator.Util.getGlobal();
     plugins = ['Unsupported', 'Auth', 'Tags', 'Filter', 'Store', 'AnnotateItPermissions'];
-    if (win.Showdown) {
+    if (win.showdown) {
       plugins.push('Markdown');
     }
     uri = win.location.href.split(/#|\?/).shift() || '';
