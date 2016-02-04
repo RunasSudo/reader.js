@@ -17,11 +17,12 @@
 var bookBody = $("#bookOuter");
 bookBody.annotator();
 
+// annotateit servers serve an SSL certificate only valid for *.herokuapp.com
 bookBody.annotator("addPlugin", "Auth", {
-	tokenUrl: "http://annotateit.org/api/token"
+	tokenUrl: "https://annotateit.herokuapp.com/api/token"
 });
 bookBody.annotator("addPlugin", "Store", {
-	prefix: "http://annotateit.org/api",
+	prefix: "https://annotateit.herokuapp.com/api",
 	annotationData: {
 		uri: window.location.href.split(/#/).shift()
 	},
