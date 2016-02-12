@@ -27,6 +27,7 @@ bookBody.annotator("addPlugin", "Store", {
 		uri: window.location.href.split(/#/).shift()
 	},
 	loadFromSearch: {
+		limit: 1000,
 		uri: window.location.href.split(/#/).shift()
 	}
 });
