@@ -1710,6 +1710,7 @@
     __extends(Viewer, _super);
 
     Viewer.prototype.events = {
+      ".annotator-link click": "onLinkClick",
       ".annotator-edit click": "onEditClick",
       ".annotator-delete click": "onDeleteClick"
     };
@@ -1721,7 +1722,7 @@
 
     Viewer.prototype.html = {
       element: "<div class=\"annotator-outer annotator-viewer\">\n  <ul class=\"annotator-widget annotator-listing\"></ul>\n</div>",
-      item: "<li class=\"annotator-annotation annotator-item\">\n  <span class=\"annotator-controls\">\n    <a href=\"#\" title=\"View as webpage\" class=\"annotator-link\">View as webpage</a>\n    <button title=\"Edit\" class=\"annotator-edit\">Edit</button>\n    <button title=\"Delete\" class=\"annotator-delete\">Delete</button>\n  </span>\n</li>"
+      item: "<li class=\"annotator-annotation annotator-item\">\n  <span class=\"annotator-controls\">\n    <button data-href=\"#\" title=\"View as webpage\" class=\"annotator-link\">View as webpage</button>\n    <button title=\"Edit\" class=\"annotator-edit\">Edit</button>\n    <button title=\"Delete\" class=\"annotator-delete\">Delete</button>\n  </span>\n</li>"
     };
 
     Viewer.prototype.options = {
@@ -1729,6 +1730,7 @@
     };
 
     function Viewer(options) {
+      this.onLinkClick = __bind(this.onLinkClick, this);
       this.onDeleteClick = __bind(this.onDeleteClick, this);
       this.onEditClick = __bind(this.onEditClick, this);
       this.load = __bind(this.load, this);
@@ -1745,9 +1747,9 @@
         _this = this;
       Annotator.Util.preventEventDefault(event);
       controls = this.element.find('.annotator-controls').addClass(this.classes.showControls);
-      setTimeout((function() {
-        return controls.removeClass(_this.classes.showControls);
-      }), 500);
+      //setTimeout((function() {
+      //  return controls.removeClass(_this.classes.showControls);
+      //}), 500);
       this.element.removeClass(this.classes.hide);
       return this.checkOrientation().publish('show');
     };
@@ -1780,7 +1782,7 @@
         if (links.length === 0 || (links[0].href == null)) {
           link.remove();
         } else {
-          link.attr('href', links[0].href);
+          link.attr('data-href', links[0].href);
         }
         if (this.options.readOnly) {
           edit.remove();
@@ -1823,11 +1825,18 @@
       return this;
     };
 
+    Viewer.prototype.onLinkClick = function(event) {
+      window.location = event.target.dataset.href;
+    };
+
     Viewer.prototype.onEditClick = function(event) {
       return this.onButtonClick(event, 'edit');
     };
 
     Viewer.prototype.onDeleteClick = function(event) {
+      if (!window.confirm("Are you sure you want to delete this annotation?")) {
+        return this;
+      }
       return this.onButtonClick(event, 'delete');
     };
 
