@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en"> 
+  <head>
+    <meta name="dtb:uid" content="http://ebooks.adelaide.edu.au/s/shakespeare/william/othello/" />
+    <meta name="dtb:depth"          content="1" />
+    <meta name="dtb:totalPageCount" content="0" />
+    <meta name="dtb:maxPageNumber"  content="0" />
+  </head> 
+  <docTitle>
+    <text>Othello, the Moore of Venice / William Shakespeare</text>
+  </docTitle> 
+  <navMap>
+    <navPoint id="np1" playOrder="1">
+      <navLabel><text>Top</text></navLabel>
+      <content src="index.html"/>
+    </navPoint>
+    <navPoint id="np2" playOrder="2">
+      <navLabel><text>Characters of the Play</text></navLabel>
+      <content src="characters.html"/>
+    </navPoint>
+    <navPoint id="np3" playOrder="3">
+      <navLabel><text>Act I</text></navLabel>
+      <content src="act1.html"/>
+    </navPoint>
+    <navPoint id="np4" playOrder="4">
+      <navLabel><text>Act II</text></navLabel>
+      <content src="act2.html"/>
+    </navPoint>
+    <navPoint id="np5" playOrder="5">
+      <navLabel><text>Act III</text></navLabel>
+      <content src="act3.html"/>
+    </navPoint>
+    <navPoint id="np6" playOrder="6">
+      <navLabel><text>Act IV</text></navLabel>
+      <content src="act4.html"/>
+    </navPoint>
+    <navPoint id="np7" playOrder="7">
+      <navLabel><text>Act V</text></navLabel>
+      <content src="act5.html"/>
+    </navPoint>
+  </navMap>
+
+</ncx>
