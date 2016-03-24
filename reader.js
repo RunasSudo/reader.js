@@ -173,7 +173,8 @@ function renderEPUB(html) {
 function finishedRendering() {
 	// Scroll position
 	if ($.url("#anchor")) {
-		$("#" + $.url("#anchor"))[0].scrollIntoView();
+		// Escape CSS
+		$("#" + $.url("#anchor").replace(/(:|\.|\[|\]|,)/g, "\\$1"))[0].scrollIntoView();
 	} else if ($.url("#scroll")) {
 		var scroll = $.url("#scroll") / 100 * ($(document).height() - $(window).height());
 		$(window).scrollTop(scroll);
