@@ -45,8 +45,19 @@ function traverseRelative(path) {
 function gotoFront() {
 	gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(0).attr("idref")));
 }
+function findTOC() {
+	// Make a guess
+	var toc;
+	if ((toc = epubContent.find("item#contents[media-type*='html']")).length > 0) {
+		return toc.attr("href");
+	}
+	if ((toc = epubContent.find("item#toc[media-type*='html']")).length > 0) {
+		return toc.attr("href");
+	}
+	return false;
+}
 function gotoTOC() {
-	gotoPage(basedir(opfPath) + epubContent.find("item#toc[media-type*='html'], item#contents[media-type*='html']").attr("href")); // Make a guess
+	gotoPage(basedir(opfPath) + findTOC());
 }
 function getChapterIndex() {
 	var id = resolvePath(page);
@@ -83,7 +94,7 @@ $.get(book + "META-INF/container.xml", function(container) {
 		document.title = epubContent.find("dc\\:title").text();
 		
 		// See if we can find a table of contents
-		if (epubContent.find("item#toc[media-type*='html'], item#contents[media-type*='html']").length === 0) {
+		if (!findTOC()) {
 			$("#btnTOC").hide();
 		}
 		
