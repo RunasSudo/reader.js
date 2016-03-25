@@ -867,3 +867,19 @@ span[lang=ar] { font-size:larger; }
 	margin-bottom:1em;
 	text-indent:0;
 }
+
+/* counters */
+.act, .scene {
+	counter-reset: line;
+}
+.act p::before {
+	counter-increment: line;
+	content: counter(line);
+	display: block;
+	float: right;
+	position: relative;
+	left: 2.5em;
+}
+.act p br {
+	counter-increment: line;
+}
