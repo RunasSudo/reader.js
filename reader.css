@@ -66,3 +66,7 @@
 		display: inline-block;
 	}
 }
+
+.annotator-hl.hl-blue {
+	background-color: rgba(10, 10, 255, 0.15);
+}

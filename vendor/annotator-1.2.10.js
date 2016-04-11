@@ -1041,6 +1041,13 @@
       return annotation;
     };
 
+    Annotator.prototype.annotationColour = function(annotation) {
+      if (annotation.tags && annotation.tags.indexOf("def") >= 0)
+        $(annotation.highlights).addClass('hl-blue');
+      else
+        $(annotation.highlights).removeClass('hl-blue');
+    }
+
     Annotator.prototype.setupAnnotation = function(annotation) {
       var e, normed, normedRanges, r, root, _k, _l, _len2, _len3, _ref1;
       root = this.wrapper[0];
@@ -1070,15 +1077,29 @@
         $.merge(annotation.highlights, this.highlightRange(normed));
       }
       annotation.quote = annotation.quote.join(' / ');
+      
+      this.annotationColour(annotation);
+      
       $(annotation.highlights).data('annotation', annotation);
       $(annotation.highlights).attr('data-annotation-id', annotation.id);
       return annotation;
     };
 
+    Annotator.prototype.onCreateAnnotation = function(annotation) {
+      this.publish('annotationCreated', [annotation]);
+      
+      this.annotationColour(annotation);
+      
+      return annotation;
+    }
+
     Annotator.prototype.updateAnnotation = function(annotation) {
       this.publish('beforeAnnotationUpdated', [annotation]);
       $(annotation.highlights).attr('data-annotation-id', annotation.id);
       this.publish('annotationUpdated', [annotation]);
+      
+      this.annotationColour(annotation);
+      
       return annotation;
     };
 
@@ -1288,7 +1309,7 @@
       save = function() {
         cleanup();
         $(annotation.highlights).removeClass('annotator-hl-temporary');
-        return _this.publish('annotationCreated', [annotation]);
+        return _this.onCreateAnnotation(annotation);
       };
       cancel = function() {
         cleanup();
