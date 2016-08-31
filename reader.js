@@ -18,8 +18,8 @@ var book = $.url("?book") + "/";
 var page = $.url("?page"); // relative to reader.html
 
 // Helper functions and button code
-function gotoPage(href, anchor) {
-	window.location = "?" + $.param({book: $.url("?book"), page: traverseRelative(href)}) + (anchor ? "#" + $.param({anchor: anchor}) : "");
+function pageLink(href, anchor) {
+	return "?" + $.param({book: $.url("?book"), page: traverseRelative(href)}) + (anchor ? "#" + $.param({anchor: anchor}) : "");
 }
 
 function resolveID(id) {
@@ -42,9 +42,6 @@ function traverseRelative(path) {
 	return path.replace(/[^\/]*\/\.\.\//, ""); // [^/]*../
 }
 
-function gotoFront() {
-	gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(0).attr("idref")));
-}
 function findTOC() {
 	// Make a guess
 	var toc;
@@ -56,25 +53,10 @@ function findTOC() {
 	}
 	return false;
 }
-function gotoTOC() {
-	gotoPage(basedir(opfPath) + findTOC());
-}
 function getChapterIndex() {
 	var id = resolvePath(page);
 	var inSpine = epubContent.find("spine itemref[idref='" + id + "']");
 	return epubContent.find("spine").children().index(inSpine);
-}
-function gotoPrev() {
-	var index = getChapterIndex();
-	if (index > 0) {
-		gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index - 1).attr("idref")));
-	}
-}
-function gotoNext() {
-	var index = getChapterIndex();
-	if (index < epubContent.find("spine").children().length - 1) {
-		gotoPage(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index + 1).attr("idref")));
-	}
 }
 
 // The guts
@@ -93,28 +75,51 @@ $.get(book + "META-INF/container.xml", function(container) {
 		epubContent = $(content);
 		document.title = epubContent.find("dc\\:title").text();
 		
-		// See if we can find a table of contents
-		if (!findTOC()) {
-			$("#btnTOC").hide();
-		}
-		
-		if (page) {
-			console.log("Loading page " + page);
-			
-			$.get(book + page, function(html) {
-				console.log("Loaded page " + page);
-				
-				renderEPUB(html);
-				window.setTimeout(finishedRendering, 500); // Wait to finish rendering
-			}, "html"); // Explicitly specify type for consistency, as some pages are XML
-		} else {
+		if (!page) {
 			var firstPageID = epubContent.find("spine").children().eq(0).attr("idref");
 			console.log("Loading id " + firstPageID);
 			var firstPageHref = basedir(opfPath) + resolveID(firstPageID);
 			console.log("Loading page " + firstPageHref);
 			
-			gotoPage(firstPageHref);
+			window.location = pageLink(firstPageHref);
+			
+			return;
 		}
+		
+		// See if we can find a table of contents
+		if (!findTOC()) {
+			$("#btnTOC").hide();
+		}
+		
+		// Link the buttons
+		$("#btnFront").attr("href", pageLink(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(0).attr("idref"))));
+		
+		if (findTOC()) {
+			$("#btnTOC").attr("href", pageLink(basedir(opfPath) + findTOC()));
+		} else {
+			$("#btnTOC").hide();
+		}
+		
+		var index = getChapterIndex();
+		if (index > 0) {
+			$("#btnPrev").attr("href", pageLink(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index - 1).attr("idref"))));
+		} else {
+			$("#btnPrev").hide();
+		}
+		if (index < epubContent.find("spine").children().length - 1) {
+			$("#btnNext").attr("href", pageLink(basedir(opfPath) + resolveID(epubContent.find("spine").children().eq(index + 1).attr("idref"))));
+		} else {
+			$("#btnNext").hide();
+		}
+		
+		console.log("Loading page " + page);
+		
+		$.get(book + page, function(html) {
+			console.log("Loaded page " + page);
+			
+			renderEPUB(html);
+			window.setTimeout(finishedRendering, 500); // Wait to finish rendering
+		}, "html"); // Explicitly specify type for consistency, as some pages are XML
 	}, "xml");
 }, "xml");
 
@@ -123,17 +128,18 @@ function renderEPUB(html) {
 	$("#book").html(htmlBody);
 	
 	// Fix ePub internal links
-	$("#book").find("a").click(function(event) {
-		var targetPage = $(this).attr("href");
-		var anchor;
-		if (targetPage.contains("#")) {
-			anchor = targetPage.substring(targetPage.indexOf("#") + 1);
-			targetPage = targetPage.substring(0, targetPage.indexOf("#"));
-		}
-		
-		if (resolvePath(basedir(page) + targetPage).length > 0) {
-			gotoPage(basedir(page) + targetPage, anchor);
-			return false;
+	$("#book").find("a").each(function(i, e) {
+		var targetPage = $(e).attr("href");
+		if (targetPage) {
+			var anchor;
+			if (targetPage.indexOf("#") >= 0) {
+				anchor = targetPage.substring(targetPage.indexOf("#") + 1);
+				targetPage = targetPage.substring(0, targetPage.indexOf("#"));
+			}
+			
+			if (resolvePath(basedir(page) + targetPage).length > 0) {
+				$(e).attr("href", pageLink(basedir(page) + targetPage, anchor));
+			}
 		}
 	});
 	
